@@ -5,6 +5,9 @@ import Dock from '../components/ui/Dock';
 import './Menu.css';
 
 const Menu = () => {
+  // Add your Render backend URL here
+  const API_BASE_URL = 'https://ideathon-rrm2.onrender.com';
+
   const items = [
     { icon: <VscHome size={24} />, label: 'Home', onClick: () => window.location.href = '/' },
     { icon: <VscArchive size={24} />, label: 'Menu', onClick: () => window.location.href = '/menu' },
@@ -32,8 +35,8 @@ const Menu = () => {
           // Show loading message
           alert('🔍 Searching for nearest charging station...');
           
-          // Call backend API to find nearest station
-          const response = await fetch('http://localhost:5000/api/find-nearest', {
+          // Call backend API to find nearest station - UPDATED URL
+          const response = await fetch(`${API_BASE_URL}/api/find-nearest`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -61,9 +64,9 @@ const Menu = () => {
             );
 
             if (userConfirmed) {
-              // Open interactive navigation map
+              // Open interactive navigation map - UPDATED URL
               window.open(
-                `http://localhost:5000/api/navigation-map?lat=${userLat}&lng=${userLng}`,
+                `${API_BASE_URL}/api/navigation-map?lat=${userLat}&lng=${userLng}`,
                 '_blank'
               );
               
@@ -82,8 +85,9 @@ const Menu = () => {
             );
 
             if (userConfirmed) {
+              // UPDATED URL
               window.open(
-                `http://localhost:5000/api/navigation-map?lat=${userLat}&lng=${userLng}`,
+                `${API_BASE_URL}/api/navigation-map?lat=${userLat}&lng=${userLng}`,
                 '_blank'
               );
             }
@@ -94,9 +98,8 @@ const Menu = () => {
           alert(
             '🚨 Unable to connect to charging station service.\n\n' +
             'Please make sure:\n' +
-            '1. The backend server is running (python app.py)\n' +
-            '2. You are on http://localhost:5173\n' +
-            '3. The backend is running on port 5000\n\n' +
+            '1. The backend server is running on Render\n' +
+            '2. You are connected to the internet\n\n' +
             'Error: ' + error.message
           );
         }
@@ -130,68 +133,68 @@ const Menu = () => {
   };
 
   const handleViewAllStations = () => {
-    // Directly open the comprehensive map without location
-    window.open('http://localhost:5000/api/map/comprehensive', '_blank');
+    // Directly open the comprehensive map without location - UPDATED URL
+    window.open(`${API_BASE_URL}/api/map/comprehensive`, '_blank');
   };
 
   const handleDownloadData = () => {
-    // Open ML data download
-    window.open('http://localhost:5000/api/ml/data', '_blank');
+    // Open ML data download - UPDATED URL
+    window.open(`${API_BASE_URL}/api/ml/data`, '_blank');
   };
 
-return (
-  <div className="page">
-    <Hyperspeed />
-    
-    <Dock 
-      items={items}
-      panelHeight={68}
-      baseItemSize={50}
-      magnification={70}
-    />
-    
-    {/* Choose the level of transparency you prefer: */}
-    
-    {/* Option 1: Very subtle transparency */}
-    <div className="subtle-transparent-container">
-      <div className="star-border-container">
-        <div className="description-text">
-          Never run out of charge - find stations instantly
+  return (
+    <div className="page">
+      <Hyperspeed />
+      
+      <Dock 
+        items={items}
+        panelHeight={68}
+        baseItemSize={50}
+        magnification={70}
+      />
+      
+      {/* Choose the level of transparency you prefer: */}
+      
+      {/* Option 1: Very subtle transparency */}
+      <div className="subtle-transparent-container">
+        <div className="star-border-container">
+          <div className="description-text">
+            Never run out of charge - find stations instantly
+          </div>
+          
+          <StarBorder
+            as="button"
+            className="menu-button"
+            color="cyan"
+            speed="5s"
+            onClick={handleFindNearestStation}
+          >
+            🔍 Find Nearest Station
+          </StarBorder>
+
+          <StarBorder
+            as="button"
+            className="menu-button"
+            color="magenta"
+            speed="5s"
+            onClick={handleViewAllStations}
+          >
+            🗺️ View All Stations
+          </StarBorder>
+
+          <StarBorder
+            as="button"
+            className="menu-button"
+            color="yellow"
+            speed="5s"
+            onClick={handleDownloadData}
+          >
+            📊 Download Data
+          </StarBorder>
         </div>
-        
-        <StarBorder
-          as="button"
-          className="menu-button"
-          color="cyan"
-          speed="5s"
-          onClick={handleFindNearestStation}
-        >
-          🔍 Find Nearest Station
-        </StarBorder>
-
-        <StarBorder
-          as="button"
-          className="menu-button"
-          color="magenta"
-          speed="5s"
-          onClick={handleViewAllStations}
-        >
-          🗺️ View All Stations
-        </StarBorder>
-
-        <StarBorder
-          as="button"
-          className="menu-button"
-          color="yellow"
-          speed="5s"
-          onClick={handleDownloadData}
-        >
-          📊 Download Data
-        </StarBorder>
       </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default Menu;
