@@ -8,9 +8,9 @@ const Menu = () => {
   // Add your Render backend URL here
   const API_BASE_URL = 'https://ideathon-rrm2.onrender.com';
 
-  const items = [
-    { icon: <VscHome size={24} />, label: 'Home', onClick: () => window.location.href = '/' },
-    { icon: <VscArchive size={24} />, label: 'Menu', onClick: () => window.location.href = '/menu' },
+ const items = [
+  { icon: <VscHome size={24} />, label: 'Home', onClick: () => window.location.hash = '/' },
+  { icon: <VscArchive size={24} />, label: 'Menu', onClick: () => window.location.hash = '/menu' },
     { icon: <VscAccount size={24} />, label: 'Profile', onClick: () => alert('Profile!') },
     { icon: <VscSettingsGear size={24} />, label: 'Settings', onClick: () => alert('Settings!') },
   ];
