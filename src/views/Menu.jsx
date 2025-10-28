@@ -6,7 +6,7 @@ import './Menu.css';
 
 const Menu = () => {
   // Add your Render backend URL here
-  const API_BASE_URL = 'https://ideathon-l4r5.onrender.com';
+  const API_BASE_URL = 'https://ideathon-2xzs.onrender.com';
 
  const items = [
   { icon: <VscHome size={24} />, label: 'Home', onClick: () => window.location.hash = '/' },
