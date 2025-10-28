@@ -2,8 +2,12 @@ import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vs
 import GradientText from '../components/ui/GradientText';
 import Dock from '../components/ui/Dock';
 import './Home.css';
+import { useRef, useState } from 'react';
 
 const Home = () => {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef(null);
+
   const items = [
     { icon: <VscHome size={24} />, label: 'Home', onClick: () => window.location.hash = '/' },
     { icon: <VscArchive size={24} />, label: 'Menu', onClick: () => window.location.hash = '/menu' },
@@ -11,22 +15,39 @@ const Home = () => {
     { icon: <VscSettingsGear size={24} />, label: 'Settings', onClick: () => alert('Settings!') },
   ];
 
+  const handleVideoLoad = () => {
+    setVideoLoaded(true);
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.log);
+    }
+  };
+
   return (
     <div className="page">
       {/* Video Background */}
       <div className="video-background">
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
           className="background-video"
+          onLoadedData={handleVideoLoad}
+          onError={(e) => console.error('Video error:', e)}
         >
-          {/* Use absolute path from public folder */}
-          <source src="/models/model.mp4" type="video/mp4" />
+          <source src="./models/model.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="video-overlay"></div>
+        
+        {/* Loading fallback */}
+        {!videoLoaded && (
+          <div className="video-loading-fallback">
+            <div className="loading-gradient"></div>
+          </div>
+        )}
       </div>
       
       <Dock 
