@@ -4,4 +4,6 @@ geopy==2.3.0
 folium==0.14.0
 pandas==2.0.3
 numpy==1.25.2
+gunicorn==21.2.0
 Werkzeug==3.0.4
+wheel==0.44.0
