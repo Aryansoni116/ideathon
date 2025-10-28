@@ -2,11 +2,10 @@ import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vs
 import GradientText from '../components/ui/GradientText';
 import Dock from '../components/ui/Dock';
 import './Home.css';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 
 const Home = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
 
   const items = [
@@ -16,43 +15,14 @@ const Home = () => {
     { icon: <VscSettingsGear size={24} />, label: 'Settings', onClick: () => alert('Settings!') },
   ];
 
-  // Try multiple video paths
-  const videoPaths = [
-    './models/model.mp4',
-    '/models/model.mp4',
-    'models/model.mp4'
-  ];
-
-  useEffect(() => {
-    // Test if video exists
-    const testVideoLoad = async () => {
-      for (const path of videoPaths) {
-        try {
-          const response = await fetch(path, { method: 'HEAD' });
-          if (response.ok) {
-            console.log('Video found at:', path);
-            return;
-          }
-        } catch (error) {
-          console.log('Video not found at:', path);
-        }
-      }
-      setVideoError(true);
-    };
-
-    testVideoLoad();
-  }, []);
+  // Use relative path for GitHub Pages
+  const videoSrc = './models/model.mp4';
 
   const handleVideoLoad = () => {
-    console.log('Video loaded successfully');
     setVideoLoaded(true);
-    setVideoError(false);
-  };
-
-  const handleVideoError = (e) => {
-    console.error('Video failed to load:', e);
-    setVideoError(true);
-    setVideoLoaded(false);
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.log);
+    }
   };
 
   return (
@@ -68,18 +38,16 @@ const Home = () => {
           preload="auto"
           className="background-video"
           onLoadedData={handleVideoLoad}
-          onError={handleVideoError}
+          onError={(e) => console.error('Video error:', e)}
         >
-          {videoPaths.map((path, index) => (
-            <source key={index} src={path} type="video/mp4" />
-          ))}
+          <source src={videoSrc} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
-        {/* Fallback background if video fails */}
-        {(videoError || !videoLoaded) && (
-          <div className="fallback-background">
-            <div className="animated-gradient-fallback"></div>
+        {/* Fallback if video doesn't load */}
+        {!videoLoaded && (
+          <div className="video-fallback">
+            <div className="fallback-gradient"></div>
           </div>
         )}
         
