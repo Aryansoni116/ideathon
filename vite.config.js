@@ -1,16 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/ideathon/',
+  base: './', // Add this line for GitHub Pages
   build: {
-    target: 'esnext', // Add this for Three.js compatibility
-    rollupOptions: {
-      external: [], // Ensure no dependencies are externalized
-    }
-  },
-  optimizeDeps: {
-    exclude: ['three', '@react-three/fiber', '@react-three/drei'] // Add this
+    outDir: 'dist',
+    sourcemap: false
   }
 })
