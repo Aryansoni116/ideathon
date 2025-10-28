@@ -2,10 +2,11 @@ import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vs
 import GradientText from '../components/ui/GradientText';
 import Dock from '../components/ui/Dock';
 import './Home.css';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 const Home = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
 
   const items = [
@@ -15,14 +16,43 @@ const Home = () => {
     { icon: <VscSettingsGear size={24} />, label: 'Settings', onClick: () => alert('Settings!') },
   ];
 
-  // Use absolute path for GitHub Pages
-  const videoSrc = `${import.meta.env.BASE_URL}models/model.mp4`;
+  // Try multiple video paths
+  const videoPaths = [
+    './models/model.mp4',
+    '/models/model.mp4',
+    'models/model.mp4'
+  ];
+
+  useEffect(() => {
+    // Test if video exists
+    const testVideoLoad = async () => {
+      for (const path of videoPaths) {
+        try {
+          const response = await fetch(path, { method: 'HEAD' });
+          if (response.ok) {
+            console.log('Video found at:', path);
+            return;
+          }
+        } catch (error) {
+          console.log('Video not found at:', path);
+        }
+      }
+      setVideoError(true);
+    };
+
+    testVideoLoad();
+  }, []);
 
   const handleVideoLoad = () => {
+    console.log('Video loaded successfully');
     setVideoLoaded(true);
-    if (videoRef.current) {
-      videoRef.current.play().catch(console.log);
-    }
+    setVideoError(false);
+  };
+
+  const handleVideoError = (e) => {
+    console.error('Video failed to load:', e);
+    setVideoError(true);
+    setVideoLoaded(false);
   };
 
   return (
@@ -38,19 +68,22 @@ const Home = () => {
           preload="auto"
           className="background-video"
           onLoadedData={handleVideoLoad}
-          onError={(e) => console.error('Video error:', e)}
+          onError={handleVideoError}
         >
-          <source src={videoSrc} type="video/mp4" />
+          {videoPaths.map((path, index) => (
+            <source key={index} src={path} type="video/mp4" />
+          ))}
           Your browser does not support the video tag.
         </video>
-        <div className="video-overlay"></div>
         
-        {/* Loading fallback */}
-        {!videoLoaded && (
-          <div className="video-loading">
-            <div className="loading-spinner"></div>
+        {/* Fallback background if video fails */}
+        {(videoError || !videoLoaded) && (
+          <div className="fallback-background">
+            <div className="animated-gradient-fallback"></div>
           </div>
         )}
+        
+        <div className="video-overlay"></div>
       </div>
       
       <Dock 
