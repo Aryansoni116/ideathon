@@ -15,16 +15,16 @@ const Home = () => {
     <div className="page">
       {/* Video Background */}
       <div className="video-background">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="background-video"
-        >
-          <source src="/models/model.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+       <video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="background-video"
+>
+  <source src={`${import.meta.env.BASE_URL}models/model.mp4`} type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
         <div className="video-overlay"></div>
       </div>
       
