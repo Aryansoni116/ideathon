@@ -15,16 +15,17 @@ const Home = () => {
     <div className="page">
       {/* Video Background */}
       <div className="video-background">
-       <video
-  autoPlay
-  muted
-  loop
-  playsInline
-  className="background-video"
->
-  <source src={`${import.meta.env.BASE_URL}models/model.mp4`} type="video/mp4" />
-  Your browser does not support the video tag.
-</video>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="background-video"
+        >
+          {/* Use absolute path from public folder */}
+          <source src="/models/model.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <div className="video-overlay"></div>
       </div>
       
@@ -41,7 +42,7 @@ const Home = () => {
             <GradientText
               colors={['#00aeffff', '#ad2837ea', '#ffb700ff']}
               animationDuration="4s"
-              fontSize="12rem"  // Direct font size
+              fontSize="12rem"
               fontWeight="900"
               className="main-title-text"
             >
@@ -53,7 +54,7 @@ const Home = () => {
               <GradientText
                 colors={['#26c3cbc0', '#4cb892ff', '#0977d1ff']}
                 animationDuration="5s"
-                fontSize="3.5rem"  // Direct font size
+                fontSize="3.5rem"
                 fontWeight="400"
                 className="subtitle-text"
               >
