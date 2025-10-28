@@ -1,10 +1,8 @@
-setuptools==65.5.0
-wheel==0.38.4
 Flask==2.3.3
 flask-cors==4.0.0
 gunicorn==21.2.0
 geopy==2.3.0
 folium==0.14.0
-pandas==1.5.3
-numpy==1.21.6    # Compatible version with pandas 1.5.3
+pandas==2.0.3  # Use latest pandas that supports Python 3.13
+numpy==2.0.0   # Use latest numpy that supports Python 3.13
 python-dotenv==1.0.0
