@@ -11,6 +11,7 @@ from io import BytesIO
 import json
 import pandas as pd
 from datetime import datetime
+import os
 
 # Configuration
 class Config:
@@ -492,7 +493,7 @@ def download_ml_data():
     """Download complete ML dataset as CSV"""
     ml_data = charging_service.get_stations_for_ml()
     
-    # Convert to DataFrame
+    # Convert to DataFrame using pandas
     df = pd.DataFrame(ml_data)
     
     # Save to BytesIO
@@ -539,38 +540,18 @@ def background_updates():
 update_thread = threading.Thread(target=background_updates, daemon=True)
 update_thread.start()
 
-if __name__ == '__main__':
-    print("📍 EV Charging Location-Based Service")
-    print("🚗 Find nearest charging stations using your location")
-    print("🗺  Interactive maps with real-time navigation")
-    print("🌐 Backend running on: http://127.0.0.1:5000")
-    print("🔗 CORS enabled for all origins")
-    
-    print("\n🎯 Key Endpoints:")
-    print("  • POST /api/find-nearest - Find nearest station with your coordinates")
-    print("  • GET  /api/navigation-map - Get interactive navigation map")
-    print("  • GET  /api/map/comprehensive - Get all stations map")
-    print("  • GET  /api/ml/data - Download ML dataset")
-    
-    print("\n📱 Frontend Integration:")
-    print("  • React app should call: http://127.0.0.1:5000/api/find-nearest")
-    print("  • CORS configured for localhost:5173, localhost:5174, etc.")
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
-    # Add this at the end of your app.py, before the if __name__ block
-
 # Production configuration
 class ProductionConfig:
-    SECRET_KEY = 'your-production-secret-key-change-this'
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'your-production-secret-key-change-this')
     CORS_ORIGINS = [
-        "http://localhost:3000",
-        "http://localhost:5173", 
-        "https://your-frontend-app.onrender.com"  # Will update after deployment
+        "https://ideathon-frontend.onrender.com",  # Your Render frontend
+        "https://aryansoni116.github.io",          # Your GitHub Pages
+        "http://localhost:5173",
+        "http://localhost:5174"
     ]
 
 # Use production config in production
 if __name__ == '__main__':
-    import os
     if os.environ.get('RENDER'):
         app.config.from_object(ProductionConfig)
         print("🚀 Running in production mode on Render")
