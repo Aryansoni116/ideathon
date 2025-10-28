@@ -15,6 +15,9 @@ const Home = () => {
     { icon: <VscSettingsGear size={24} />, label: 'Settings', onClick: () => alert('Settings!') },
   ];
 
+  // Use absolute path for GitHub Pages
+  const videoSrc = `${import.meta.env.BASE_URL}models/model.mp4`;
+
   const handleVideoLoad = () => {
     setVideoLoaded(true);
     if (videoRef.current) {
@@ -32,20 +35,20 @@ const Home = () => {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="background-video"
           onLoadedData={handleVideoLoad}
           onError={(e) => console.error('Video error:', e)}
         >
-          <source src="./models/model.mp4" type="video/mp4" />
+          <source src={videoSrc} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="video-overlay"></div>
         
         {/* Loading fallback */}
         {!videoLoaded && (
-          <div className="video-loading-fallback">
-            <div className="loading-gradient"></div>
+          <div className="video-loading">
+            <div className="loading-spinner"></div>
           </div>
         )}
       </div>
