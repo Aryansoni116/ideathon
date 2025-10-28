@@ -9,7 +9,7 @@ from geopy.distance import geodesic
 import folium
 from io import BytesIO
 import json
-import csv
+import pandas as pd
 from datetime import datetime
 
 # Configuration
@@ -492,26 +492,16 @@ def download_ml_data():
     """Download complete ML dataset as CSV"""
     ml_data = charging_service.get_stations_for_ml()
     
-    # Create CSV manually without pandas
-    if not ml_data:
-        return jsonify({'error': 'No data available'}), 400
+    # Convert to DataFrame
+    df = pd.DataFrame(ml_data)
     
-    # Create CSV in memory
-    output = BytesIO()
-    writer = csv.writer(output)
-    
-    # Write header
-    if ml_data:
-        writer.writerow(ml_data[0].keys())
-    
-    # Write data rows
-    for row in ml_data:
-        writer.writerow(row.values())
-    
-    output.seek(0)
+    # Save to BytesIO
+    csv_bytes = BytesIO()
+    df.to_csv(csv_bytes, index=False)
+    csv_bytes.seek(0)
     
     return send_file(
-        output,
+        csv_bytes,
         mimetype='text/csv',
         download_name=f'ev_charging_ml_data_{datetime.now().strftime("%Y%m%d_%H%M")}.csv',
         as_attachment=True
@@ -549,13 +539,33 @@ def background_updates():
 update_thread = threading.Thread(target=background_updates, daemon=True)
 update_thread.start()
 
+if __name__ == '__main__':
+    print("📍 EV Charging Location-Based Service")
+    print("🚗 Find nearest charging stations using your location")
+    print("🗺  Interactive maps with real-time navigation")
+    print("🌐 Backend running on: http://127.0.0.1:5000")
+    print("🔗 CORS enabled for all origins")
+    
+    print("\n🎯 Key Endpoints:")
+    print("  • POST /api/find-nearest - Find nearest station with your coordinates")
+    print("  • GET  /api/navigation-map - Get interactive navigation map")
+    print("  • GET  /api/map/comprehensive - Get all stations map")
+    print("  • GET  /api/ml/data - Download ML dataset")
+    
+    print("\n📱 Frontend Integration:")
+    print("  • React app should call: http://127.0.0.1:5000/api/find-nearest")
+    print("  • CORS configured for localhost:5173, localhost:5174, etc.")
+    
+    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Add this at the end of your app.py, before the if __name__ block
+
 # Production configuration
 class ProductionConfig:
     SECRET_KEY = 'your-production-secret-key-change-this'
     CORS_ORIGINS = [
         "http://localhost:3000",
         "http://localhost:5173", 
-        "https://aryansoni116.github.io"  # Your GitHub Pages frontend
+        "https://your-frontend-app.onrender.com"  # Will update after deployment
     ]
 
 # Use production config in production
