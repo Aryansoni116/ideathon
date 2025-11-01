@@ -1,18 +1,37 @@
 import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vsc';
-import Hyperspeed from '../components/MenuBackground';
+import MenuBackground from '../components/MenuBackground';
 import StarBorder from '../components/ui/StarBorder'; 
 import Dock from '../components/ui/Dock';
 import './Menu.css';
+import { useNavigate } from 'react-router-dom';
 
 const Menu = () => {
+  const navigate = useNavigate();
+  
   // Add your Render backend URL here
   const API_BASE_URL = 'https://ideathon-2xzs.onrender.com';
 
- const items = [
-  { icon: <VscHome size={24} />, label: 'Home', onClick: () => window.location.hash = '/' },
-  { icon: <VscArchive size={24} />, label: 'Menu', onClick: () => window.location.hash = '/menu' },
-    { icon: <VscAccount size={24} />, label: 'Profile', onClick: () => alert('Profile!') },
-    { icon: <VscSettingsGear size={24} />, label: 'Settings', onClick: () => alert('Settings!') },
+  const items = [
+    { 
+      icon: <VscHome size={24} />, 
+      label: 'Home', 
+      onClick: () => navigate('/home') 
+    },
+    { 
+      icon: <VscArchive size={24} />, 
+      label: 'Menu', 
+      onClick: () => navigate('/menu') 
+    },
+    { 
+      icon: <VscAccount size={24} />, 
+      label: 'Profile', 
+      onClick: () => alert('Profile!') 
+    },
+    { 
+      icon: <VscSettingsGear size={24} />, 
+      label: 'Settings', 
+      onClick: () => alert('Settings!') 
+    },
   ];
 
   const handleFindNearestStation = async () => {
@@ -35,7 +54,7 @@ const Menu = () => {
           // Show loading message
           alert('🔍 Searching for nearest charging station...');
           
-          // Call backend API to find nearest station - UPDATED URL
+          // Call backend API to find nearest station
           const response = await fetch(`${API_BASE_URL}/api/find-nearest`, {
             method: 'POST',
             headers: {
@@ -46,6 +65,10 @@ const Menu = () => {
               longitude: userLng
             })
           });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
           const result = await response.json();
 
@@ -64,28 +87,30 @@ const Menu = () => {
             );
 
             if (userConfirmed) {
-              // Open interactive navigation map - UPDATED URL
+              // Open interactive navigation map
               window.open(
                 `${API_BASE_URL}/api/navigation-map?lat=${userLat}&lng=${userLng}`,
                 '_blank'
               );
               
-              // Also open Google Maps for directions
-              setTimeout(() => {
-                window.open(result.google_maps_url, '_blank');
-              }, 1000);
+              // Also open Google Maps for directions if available
+              if (result.google_maps_url) {
+                setTimeout(() => {
+                  window.open(result.google_maps_url, '_blank');
+                }, 1000);
+              }
             }
 
           } else {
             // No available stations found
+            const alternativeCount = result.alternative_stations?.length || 0;
             const userConfirmed = confirm(
               `❌ No available charging stations found within 20km.\n\n` +
-              `But we found ${result.alternative_stations?.length || 0} stations nearby.\n\n` +
+              `But we found ${alternativeCount} stations nearby.\n\n` +
               `Would you like to view all nearby stations on the map?`
             );
 
             if (userConfirmed) {
-              // UPDATED URL
               window.open(
                 `${API_BASE_URL}/api/navigation-map?lat=${userLat}&lng=${userLng}`,
                 '_blank'
@@ -133,18 +158,18 @@ const Menu = () => {
   };
 
   const handleViewAllStations = () => {
-    // Directly open the comprehensive map without location - UPDATED URL
+    // Directly open the comprehensive map without location
     window.open(`${API_BASE_URL}/api/map/comprehensive`, '_blank');
   };
 
   const handleDownloadData = () => {
-    // Open ML data download - UPDATED URL
+    // Open ML data download
     window.open(`${API_BASE_URL}/api/ml/data`, '_blank');
   };
 
   return (
     <div className="page">
-      <Hyperspeed />
+      <MenuBackground />
       
       <Dock 
         items={items}
@@ -153,9 +178,7 @@ const Menu = () => {
         magnification={70}
       />
       
-      {/* Choose the level of transparency you prefer: */}
-      
-      {/* Option 1: Very subtle transparency */}
+      {/* Main content container */}
       <div className="subtle-transparent-container">
         <div className="star-border-container">
           <div className="description-text">
