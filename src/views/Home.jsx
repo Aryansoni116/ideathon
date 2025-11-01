@@ -11,7 +11,7 @@ const Home = () => {
     { 
       icon: <VscHome size={24} />, 
       label: 'Home', 
-      onClick: () => navigate('/home') 
+      onClick: () => navigate('/') 
     },
     { 
       icon: <VscArchive size={24} />, 
