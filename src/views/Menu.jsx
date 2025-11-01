@@ -15,7 +15,7 @@ const Menu = () => {
     { 
       icon: <VscHome size={24} />, 
       label: 'Home', 
-      onClick: () => navigate('/') 
+      onClick: () => navigate('/home') 
     },
     { 
       icon: <VscArchive size={24} />, 
